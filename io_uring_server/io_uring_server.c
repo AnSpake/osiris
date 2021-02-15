@@ -98,6 +98,27 @@ void accept_client(int server_socket, struct io_uring* ring)
     memcpy(&sqe->user_data, &conn, sizeof(conn));
 }
 
+void submit_read(struct io_uring* ring, int client_fd)
+{
+
+    struct io_uring_sqe *sqe = io_uring_get_sqe(ring);
+
+    io_uring_prep_read(sqe, client_fd, NULL, BUFF_MAX_SIZE, 0);
+    io_uring_sqe_set_flags(sqe, IOSQE_BUFFER_SELECT);
+
+    // TODO: remove ?
+    sqe->buf_group = GRP_ID;
+
+    struct conn_data conn =
+    {
+        .fd = client_fd,
+        .buff_idx = 0,
+        .type = READ,
+    };
+
+    memcpy(&sqe->user_data, &conn, sizeof(conn));
+}
+
 void server_loop(int server_socket, struct io_uring ring)
 {
     // Register server socket to monitor for new connections
@@ -133,6 +154,8 @@ void server_loop(int server_socket, struct io_uring ring)
             switch (curr_type)
             {
                 case ACCEPT:
+                    if (event_res >= 0)
+                        submit_read(&ring, event_res);
 
                     // Register server again to monitor for new connections
                     accept_client(server_socket, &ring);
