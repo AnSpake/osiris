@@ -119,6 +119,37 @@ void submit_read(struct io_uring* ring, int client_fd)
     memcpy(&sqe->user_data, &conn, sizeof(conn));
 }
 
+void submit_write(struct io_uring* ring, int client_fd, int buff_idx, int nread)
+{
+    struct io_uring_sqe* sqe = io_uring_get_sqe(ring);
+
+    io_uring_prep_send(sqe, client_fd, &buffers[buff_idx], nread, 0);
+
+    struct conn_data conn =
+    {
+        .fd = client_fd,
+        .buff_idx = buff_idx,
+        .type = WRITE,
+    };
+
+    memcpy(&sqe->user_data, &conn, sizeof(conn));
+}
+
+void register_provide_buffers(struct io_uring* ring, int buff_idx)
+{
+    struct io_uring_sqe* sqe = io_uring_get_sqe(ring);
+    io_uring_prep_provide_buffers(sqe, buffers[buff_idx], BUFF_MAX_SIZE, 1, GRP_ID, buff_idx);
+
+    struct conn_data conn =
+    {
+        .fd = 0,
+        .buff_idx = 0,
+        .type = -1,
+    };
+
+    memcpy(&sqe->user_data, &conn, sizeof(conn));
+}
+
 void server_loop(int server_socket, struct io_uring ring)
 {
     // Register server socket to monitor for new connections
@@ -159,6 +190,30 @@ void server_loop(int server_socket, struct io_uring ring)
 
                     // Register server again to monitor for new connections
                     accept_client(server_socket, &ring);
+                    break;
+
+                case READ:
+                    // Client disconnected
+                    if (event_res == 0)
+                    {
+                        if (conn.fd != -1)
+                            close(conn.fd);
+                    }
+
+                    // Handle request: here we only print the message
+                    printf("Echo: %s\n", buffers[conn.buff_idx]);
+
+                    // TODO: write back to message (handle write request)
+                    int buff_idx = cqe->flags >> 16;
+                    submit_write(&ring, conn.fd, buff_idx, event_res);
+                    break;
+
+                case WRITE:
+                    // Register new buffer
+                    register_provide_buffers(&ring, conn.buff_idx);
+
+                    // Respond to write event
+                    submit_read(&ring, conn.fd);
                     break;
 
                 default:
