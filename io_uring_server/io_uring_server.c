@@ -199,6 +199,7 @@ void server_loop(int server_socket, struct io_uring ring)
                     {
                         if (conn.fd != -1)
                             close(conn.fd);
+                        break;
                     }
 
                     // Buffer selection
