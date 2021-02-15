@@ -257,6 +257,14 @@ int main(int argc, char **argv)
         return EXIT_FAILURE;
     }
 
+    // Allocate memory for submission/completion queue in one mmap
+    // Brings the necessary mmaps calls down from three to two
+    if (!(params.features & IORING_FEAT_SINGLE_MMAP))
+    {
+        fprintf(stderr, "IORING_FEAT_SINGLE_MMAP not available.\n");
+        return EXIT_FAILURE;
+    }
+
     // IORING_FEAT_FAST_POLL consumes less ressources for polling mode
     if (!(params.features & IORING_FEAT_FAST_POLL))
     {
