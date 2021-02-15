@@ -17,3 +17,10 @@ epoll:
 benchmark:
 	echo "Launching the benchmark"
 	echo "Not available yet..."
+
+clean:
+	make clean -C io_uring
+	make clean -C epoll
+	rm -rf liburing
+
+.PHONY: clean io_uring epoll benchmark install all
