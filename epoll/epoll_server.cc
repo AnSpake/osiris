@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fcntl.h>
 #include <netdb.h>
+#include <sys/epoll.h>
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <unistd.h>
@@ -82,6 +83,34 @@ int prepare_epoll_server(std::string ip, std::string port)
     return socket;
 }
 
+void register_socket(int socket, int epoll_id, uint32_t flag)
+{
+    struct epoll_event event {};
+    event.events = flag | EPOLLET;
+    event.data.fd = socket;
+
+    epoll_ctl(epoll_id, EPOLL_CTL_ADD, socket, &event);
+}
+
+int accept_client(int server_socket, int epoll_id)
+{
+    int socket = accept(server_socket, nullptr, nullptr);
+    if (socket == -1)
+        return -1;
+
+    if (NONBLOCKING_IO == 1)
+        set_non_blocking(socket);
+
+//#if defined(EPOLL_MODE_ET) && EPOLL_MODE_ET+0
+#ifdef EPOLL_MODE_ET
+    register_socket(socket, epoll_id, EPOLLIN | EPOLLOUT);
+#else
+    register_socket(socket, epoll_id, EPOLLIN);
+#endif
+
+    return socket;
+}
+
 void server_loop(int server_socket, int epoll_id)
 {
     while (true)
@@ -98,6 +127,13 @@ int main(int argc, char** argv)
         return 1;
     }
 
+    int epoll_id = epoll_create1(0);
+    if (epoll_id == -1)
+    {
+        std::cerr << "Error while creating the epoll instance\n";
+        return 1;
+    }
+
     int server_socket = prepare_epoll_server(argv[1], argv[2]);
     if (server_socket == -1)
     {
@@ -105,10 +141,14 @@ int main(int argc, char** argv)
         return 1;
     }
 
+    register_socket(server_socket, epoll_id, EPOLLIN);
     server_loop(server_socket, epoll_id);
 
     if (server_socket != -1)
         close(server_socket);
+
+    if (epoll_id != -1)
+        close(epoll_id);
 
     return 0;
 }
