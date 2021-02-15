@@ -172,6 +172,13 @@ int main(int argc, char **argv)
         return EXIT_FAILURE;
     }
 
+    // IORING_FEAT_FAST_POLL consumes less ressources for polling mode
+    if (!(params.features & IORING_FEAT_FAST_POLL))
+    {
+        fprintf(stderr, "IORING_FEAT_FAST_POLL not available.\n");
+        return EXIT_FAILURE;
+    }
+
     // Enable automatic buffer selection (https://lwn.net/Articles/815491/)
     struct io_uring_probe *probe = io_uring_get_probe_ring(&ring);
     if (!probe || !io_uring_opcode_supported(probe, IORING_OP_PROVIDE_BUFFERS))
