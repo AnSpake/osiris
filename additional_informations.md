@@ -1,5 +1,14 @@
 # Welcome !
 
+## Update: Feb 15th 7pm
+The bug on the hanging recv is solved, you can test the project on your computer if you want
+> make all
+> cd io_uring_server
+> ./io_uring_server 127.0.0.1 8000
+
+in another terminal
+> echo toto | netcat 127.0.0.1 8000
+
 ## Disclaimer
 This is a ongoing project, it is not finished yet.  
 This project needs at least a linux kernel 5.9 or later.  

@@ -14,7 +14,7 @@ This repository contains:
 
 ## Difficulties
 - kernel polling: IORING_FEAT_SQPOLL_NONFIXED doesn't seems to be available yet
-- prep_read is making io_uring_submit_and_wait blocking indefinitely in latest master branch
+- ~~prep_read is making io_uring_submit_and_wait blocking indefinitely in latest master branch~~ (solved)
 
 ## io_uring additionnal informations
 - Kernel polling mode will only cost 2 context switches for the server (and additionnal
@@ -26,9 +26,9 @@ more performance (https://github.com/axboe/liburing/blob/master/man/io_uring_set
 - This io_uring server uses automatic buffer selection (https://lwn.net/Articles/815491/)
 
 ## TODO
-- [ ] debug read (urgent)
+- [x] debug read (urgent)
 - [ ] Kernel polling mode available
-- [ ] io_uring server handling multiple clients (c++ comeback ?)
+- [ ] io_uring server handling multiple clients (c++ comeback ?) (need research as it might not need it thanks to Automatic buffer selection)
 - [ ] benchmarking routines
 
 ### Authors
