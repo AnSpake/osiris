@@ -8,19 +8,19 @@ install:
 	make -C liburing
 	sudo make install -C liburing
 
-io_uring:
-	make -C io_uring
+io_uring_srv:
+	make -C io_uring_server
 
-epoll:
-	make -C epoll
+epoll_srv:
+	make -C epoll_server
 
 benchmark:
 	echo "Launching the benchmark"
 	echo "Not available yet..."
 
 clean:
-	make clean -C io_uring
-	make clean -C epoll
+	make clean -C io_uring_server
+	make clean -C epoll_server
 	rm -rf liburing
 
-.PHONY: clean io_uring epoll benchmark install all
+.PHONY: clean benchmark install all
