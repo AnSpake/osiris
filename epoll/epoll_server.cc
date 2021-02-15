@@ -13,6 +13,8 @@
 #define DEFAULT_BUFFER_SIZE 256
 #define NONBLOCKING_IO 1
 
+using clients_umap = std::unordered_map<int, std::vector<char>>;
+
 int create_and_bind(struct addrinfo *result)
 {
     for (auto& rp = result; rp != NULL; rp = rp->ai_next)
@@ -113,9 +115,65 @@ int accept_client(int server_socket, int epoll_id)
 
 void server_loop(int server_socket, int epoll_id)
 {
+    clients_umap clients;
     while (true)
     {
-        //FIXME
+        struct epoll_event events[MAX_EVENTS];
+        int nbr_events = epoll_wait(epoll_id, events, MAX_EVENTS, -1);
+
+        for (int ev = 0; ev < nbr_events; ++ev)
+        {
+            if (events[ev].data.fd == server_socket)
+            {
+                int client = accept_client(server_socket, epoll_id);
+                clients.emplace(client, std::vector<char>(DEFAULT_BUFFER_SIZE));
+            }
+            else
+            {
+                int client_socket = events[ev].data.fd;
+                uint32_t event_flags = events[ev].events;
+
+                bool client_disconnect = false;
+                if (event_flags & EPOLLIN)
+                {
+                    auto curr_idx = clients.find(client_socket);
+                    if (curr_idx == clients.end())
+                    {
+                        std::cerr << "Could not find clients\n";
+                        continue;
+                    }
+                    int curr_socket = curr_idx->first;
+                    std::vector<char> curr_buff = curr_idx->second;
+
+                    // Assume we get everything in one call
+                    ssize_t nread = recv(curr_socket,
+                                         curr_buff.data(),
+                                         DEFAULT_BUFFER_SIZE,
+                                         MSG_NOSIGNAL);
+
+                    if (nread == -1)
+                    {
+                        std::cerr << "Recv failed\n";
+                        continue;
+                    }
+
+                    if (nread == 0)
+                    {
+                        client_disconnect = true;
+                        continue;
+                    }
+
+                    curr_buff.resize(nread);
+                    std::cout << curr_buff.data();
+                }
+
+                if (client_disconnect)
+                {
+                    if (client_socket != 1)
+                        close(client_socket);
+                }
+            }
+        }
     }
 }
 
