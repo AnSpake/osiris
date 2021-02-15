@@ -10,6 +10,7 @@
 
 #define MAX_EVENTS 64
 #define DEFAULT_BUFFER_SIZE 256
+#define NONBLOCKING_IO 1
 
 int create_and_bind(struct addrinfo *result)
 {
@@ -39,6 +40,15 @@ int create_and_bind(struct addrinfo *result)
     return -1;
 }
 
+void set_non_blocking(int socket)
+{
+    if (fcntl(socket, F_SETFL, fcntl(socket, F_GETFL) | O_NONBLOCK) == -1)
+    {
+        std::cerr << "Failed to set the socket nonblocking\n";
+        exit(EXIT_FAILURE);
+    }
+}
+
 int prepare_epoll_server(std::string ip, std::string port)
 {
     struct addrinfo *result;
@@ -65,6 +75,9 @@ int prepare_epoll_server(std::string ip, std::string port)
     free(result);
 
     listen(socket, SOMAXCONN);
+
+    if (NONBLOCKING_IO == 1)
+        set_non_blocking(socket);
 
     return socket;
 }
