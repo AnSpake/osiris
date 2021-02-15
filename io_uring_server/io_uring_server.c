@@ -100,10 +100,49 @@ void accept_client(int server_socket, struct io_uring* ring)
 
 void server_loop(int server_socket, struct io_uring ring)
 {
+    // Register server socket to monitor for new connections
+    accept_client(server_socket, &ring);
 
     while (true)
     {
-        // FIXME
+        // Wait for 1 event to be completed
+        io_uring_submit_and_wait(&ring, 1);
+
+        struct io_uring_cqe *cqe;
+        size_t head;
+        size_t count = 0;
+
+        io_uring_for_each_cqe(&ring, head, cqe)
+        {
+            ++count;
+
+            int event_res = cqe->res;
+            if (event_res < 0)
+            {
+                fprintf(stderr, "io_uring syscall failed: %d\n", event_res);
+                if (event_res == -ENOBUFS)
+                    fprintf(stderr, "Empty buffers after automatic selection");
+                exit(EXIT_FAILURE);
+            }
+
+            struct conn_data conn;
+            memcpy(&conn, &cqe->user_data, sizeof(conn));
+
+            event_type curr_type = conn.type;
+
+            switch (curr_type)
+            {
+                case ACCEPT:
+
+                    // Register server again to monitor for new connections
+                    accept_client(server_socket, &ring);
+                    break;
+
+                default:
+                    fprintf(stderr, "Incorrect type of request\n");
+            }
+        }
+        io_uring_cq_advance(&ring, count);
     }
 }
 
