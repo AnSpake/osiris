@@ -98,12 +98,12 @@ void accept_client(int server_socket, struct io_uring* ring)
     memcpy(&sqe->user_data, &conn, sizeof(conn));
 }
 
-void submit_read(struct io_uring* ring, int client_fd)
+void submit_recv(struct io_uring* ring, int client_fd)
 {
 
     struct io_uring_sqe *sqe = io_uring_get_sqe(ring);
 
-    io_uring_prep_read(sqe, client_fd, NULL, BUFF_MAX_SIZE, 0);
+    io_uring_prep_recv(sqe, client_fd, NULL, BUFF_MAX_SIZE, 0);
     io_uring_sqe_set_flags(sqe, IOSQE_BUFFER_SELECT);
 
     // TODO: remove ?
@@ -119,7 +119,7 @@ void submit_read(struct io_uring* ring, int client_fd)
     memcpy(&sqe->user_data, &conn, sizeof(conn));
 }
 
-void submit_write(struct io_uring* ring, int client_fd, int buff_idx, int nread)
+void submit_send(struct io_uring* ring, int client_fd, int buff_idx, int nread)
 {
     struct io_uring_sqe* sqe = io_uring_get_sqe(ring);
 
@@ -186,7 +186,7 @@ void server_loop(int server_socket, struct io_uring ring)
             {
                 case ACCEPT:
                     if (event_res >= 0)
-                        submit_read(&ring, event_res);
+                        submit_recv(&ring, event_res);
 
                     // Register server again to monitor for new connections
                     accept_client(server_socket, &ring);
@@ -205,7 +205,7 @@ void server_loop(int server_socket, struct io_uring ring)
 
                     // TODO: write back to message (handle write request)
                     int buff_idx = cqe->flags >> 16;
-                    submit_write(&ring, conn.fd, buff_idx, event_res);
+                    submit_send(&ring, conn.fd, buff_idx, event_res);
                     break;
 
                 case WRITE:
@@ -213,7 +213,7 @@ void server_loop(int server_socket, struct io_uring ring)
                     register_provide_buffers(&ring, conn.buff_idx);
 
                     // Respond to write event
-                    submit_read(&ring, conn.fd);
+                    submit_recv(&ring, conn.fd);
                     break;
 
                 default:
