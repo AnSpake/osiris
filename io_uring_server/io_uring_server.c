@@ -20,7 +20,8 @@ typedef enum
 {
     ACCEPT,
     READ,
-    WRITE
+    WRITE,
+    AUTO_BUFF_SELEC,
 } event_type;
 
 struct conn_data
@@ -144,7 +145,7 @@ void register_provide_buffers(struct io_uring* ring, int buff_idx)
     {
         .fd = 0,
         .buff_idx = 0,
-        .type = -1,
+        .type = AUTO_BUFF_SELEC,
     };
 
     memcpy(&sqe->user_data, &conn, sizeof(conn));
@@ -218,8 +219,12 @@ void server_loop(int server_socket, struct io_uring ring)
                     submit_recv(&ring, conn.fd);
                     break;
 
+                case AUTO_BUFF_SELEC:
+                    // already check that event_res > 0
+                    break;
+
                 default:
-                    fprintf(stderr, "Incorrect type of request\n");
+                    fprintf(stderr, "Incorrect event_type: %d\n", curr_type);
             }
         }
         io_uring_cq_advance(&ring, count);
