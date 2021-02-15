@@ -200,11 +200,13 @@ void server_loop(int server_socket, struct io_uring ring)
                             close(conn.fd);
                     }
 
+                    // Buffer selection
+                    int buff_idx = cqe->flags >> 16;
+
                     // Handle request: here we only print the message
-                    printf("Echo: %s\n", buffers[conn.buff_idx]);
+                    printf("Echo: %s\n", buffers[buff_idx]);
 
                     // TODO: write back to message (handle write request)
-                    int buff_idx = cqe->flags >> 16;
                     submit_send(&ring, conn.fd, buff_idx, event_res);
                     break;
 
