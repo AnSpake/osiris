@@ -2,9 +2,33 @@
 #include <netdb.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <unistd.h>
+
+#include "liburing.h"
+
+#define ENTRIES 128
+#define BUFF_MAX_SIZE 256
+#define GRP_ID 1337
+
+#define MAXCONN 128
+char buffers[MAXCONN][BUFF_MAX_SIZE] = { 0 };
+
+typedef enum
+{
+    ACCEPT,
+    READ,
+    WRITE
+} event_type;
+
+struct conn_data
+{
+    __u32 fd;
+    __u16 type;
+    __u16 buff_idx;
+};
 
 int create_and_bind(struct addrinfo *result)
 {
@@ -59,11 +83,27 @@ int prepare_server_socket(const char* ip, const char* port)
     return socket;
 }
 
+void accept_client(int server_socket, struct io_uring* ring)
+{
+    struct io_uring_sqe *sqe = io_uring_get_sqe(ring);
+
+    io_uring_prep_accept(sqe, server_socket, NULL, NULL, 0);
+
+    struct conn_data conn =
+    {
+        .fd = server_socket,
+        .type = ACCEPT,
+    };
+
+    memcpy(&sqe->user_data, &conn, sizeof(conn));
+}
+
 void server_loop(int server_socket, struct io_uring ring)
 {
+
     while (true)
     {
-        //FIXME
+        // FIXME
     }
 }
 
@@ -81,6 +121,16 @@ int main(int argc, char **argv)
     {
         printf("Error while creating the server\n");
         return 1;
+    }
+
+    // io_uring configurations
+    struct io_uring ring;
+    struct io_uring_params params = { 0 };
+    // params.flags = IORING_SETUP_SQPOLL;
+    if (io_uring_queue_init_params(ENTRIES, &ring, &params))
+    {
+        fprintf(stderr, "io_uring_queue_params failed: %s.\n", strerror(errno));
+        return EXIT_FAILURE;
     }
 
     // entering server's loop
