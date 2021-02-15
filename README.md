@@ -1,11 +1,13 @@
 # Osiris
 
 ## Disclaimer
-This is a ongoing project.
-Benchmarking results are not out yet.
+This is a ongoing project. 
+Benchmarking results are not out yet. 
+This project uses latest master of https://github.com/axboe/liburing/commits/master
+as of Feb 13, 2021, commits 5671af3
 
 ## io_uring benchmarking
-This repository contains:
+This repository contains: 
 - epoll server with Level and Edge trigger modes
 - io_uring server with interrupt, poll and kernel polling modes
 - benchmarking results (faio)
