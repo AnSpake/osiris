@@ -24,6 +24,9 @@ IORING_FEAT_SQPOLL_NONFIXED
 - Interrupt and polling modes can use the flag IORING_FEAT_FAST_POLL to gain
 more performance (https://github.com/axboe/liburing/blob/master/man/io_uring_setup.2#L255)
 - This io_uring server uses automatic buffer selection (https://lwn.net/Articles/815491/)
+- IORING_FEAT_SINGLE_MMAP enable the SQ and CQ rings to be mapped in one mmap call,
+the SQEs must still be allocated separately.
+This brings the necessary mmap calls down from 3 to 2.
 
 ## TODO
 - [x] debug read (urgent)
