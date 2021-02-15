@@ -30,10 +30,11 @@ This brings the necessary mmap calls down from 3 to 2.
 
 ## TODO
 - [x] debug read (urgent)
-- [ ] Kernel polling mode available
-- [ ] io_uring server handling multiple clients (c++ comeback ?) (need research as it might not need it thanks to Automatic buffer selection)
+- [ ] Kernel polling mode available (register fds for now)
+- [ ] io_uring server handling multiple clients (c++ comeback ?) (need research as we might not need it thanks to Automatic buffer selection)
 - [ ] benchmarking routines
+- [ ] Kernel polling mode with FEAT_SQPOLL_NONFIXED flag when it's available
 
 ### Authors
 Amandine Nassiri <amandine.nassiri@epita.fr>  
-https://github.com/AnSpake/neith
+https://github.com/AnSpake/osiris
