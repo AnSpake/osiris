@@ -22,6 +22,6 @@ debug: $(OBJ)
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $^
 
 clean:
-	$(RM) $(BIN_ET) $(BIN_LT) $(OBJ)
+	$(RM) $(BIN_ET) $(BIN_LT) $(OBJ) debug
 
 .PHONY: all clean
