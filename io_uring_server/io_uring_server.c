@@ -172,6 +172,28 @@ int main(int argc, char **argv)
         return EXIT_FAILURE;
     }
 
+    // Enable automatic buffer selection (https://lwn.net/Articles/815491/)
+    struct io_uring_probe *probe = io_uring_get_probe_ring(&ring);
+    if (!probe || !io_uring_opcode_supported(probe, IORING_OP_PROVIDE_BUFFERS))
+    {
+        if (probe)
+            free(probe);
+        fprintf(stderr, "Automatic buffer selection is not supported.\n");
+        return EXIT_FAILURE;
+    }
+    free(probe);
+    struct io_uring_cqe *cqe;
+    struct io_uring_sqe *sqe = io_uring_get_sqe(&ring);
+    io_uring_prep_provide_buffers(sqe, buffers, BUFF_MAX_SIZE, MAXCONN, GRP_ID, 0);
+    io_uring_submit(&ring);
+    io_uring_wait_cqe(&ring, &cqe);
+    if (cqe->res < 0)
+    {
+        fprintf(stderr, "Failed to enable automatic buffer selection");
+        return EXIT_FAILURE;
+    }
+    io_uring_cqe_seen(&ring, cqe);
+
     // entering server's loop
     server_loop(server_socket, ring);
 
