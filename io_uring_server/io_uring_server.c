@@ -107,7 +107,7 @@ void submit_recv(struct io_uring* ring, int client_fd)
     io_uring_prep_recv(sqe, client_fd, NULL, BUFF_MAX_SIZE, 0);
     io_uring_sqe_set_flags(sqe, IOSQE_BUFFER_SELECT);
 
-    // TODO: remove ?
+    // Needed for automatic buffer selection
     sqe->buf_group = GRP_ID;
 
     struct conn_data conn =
@@ -208,7 +208,6 @@ void server_loop(int server_socket, struct io_uring ring)
                     // Handle request: here we only print the message
                     printf("Echo: %s", buffers[buff_idx]);
 
-                    // TODO: write back to message (handle write request)
                     submit_send(&ring, conn.fd, buff_idx, event_res);
                     break;
 
