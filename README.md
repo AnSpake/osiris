@@ -5,6 +5,7 @@ This is a ongoing project.
 Benchmarking results are not out yet.  
 This project uses latest master of https://github.com/axboe/liburing/commits/master
 as of Feb 13, 2021, commits 5671af3
+YOU NEED TO BE ON LINUX KERNEL 5.11 OR LATER.
 
 ## io_uring benchmarking
 This repository contains: 
@@ -13,7 +14,7 @@ This repository contains:
 - benchmarking results (faio)
 
 ## Difficulties
-- kernel polling: IORING_FEAT_SQPOLL_NONFIXED doesn't seems to be available yet
+- kernel polling: IORING_FEAT_SQPOLL_NONFIXED doesn't seems to be available yet -> it's on linux kernel 5.10
 - ~~prep_read is making io_uring_submit_and_wait blocking indefinitely in latest master branch~~ (solved)
 
 ## io_uring additionnal informations
