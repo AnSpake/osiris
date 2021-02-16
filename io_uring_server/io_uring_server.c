@@ -249,7 +249,7 @@ int main(int argc, char **argv)
     // io_uring configurations
     struct io_uring ring;
     struct io_uring_params params = { 0 };
-    // params.flags = IORING_SETUP_SQPOLL;
+    params.flags = IORING_SETUP_SQPOLL;
     if (io_uring_queue_init_params(ENTRIES, &ring, &params))
     {
         fprintf(stderr, "io_uring_queue_params failed: %s.\n", strerror(errno));
@@ -264,12 +264,20 @@ int main(int argc, char **argv)
         return EXIT_FAILURE;
     }
 
+    if (!(params.features & IORING_FEAT_SQPOLL_NONFIXED))
+    {
+        fprintf(stderr, "IORING_FEAT_SQPOLL_NONFIXED not available.\n");
+        return EXIT_FAILURE;
+    }
+
+    /*
     // IORING_FEAT_FAST_POLL consumes less ressources for polling mode
     if (!(params.features & IORING_FEAT_FAST_POLL))
     {
         fprintf(stderr, "IORING_FEAT_FAST_POLL not available.\n");
         return EXIT_FAILURE;
     }
+    */
 
     // Enable automatic buffer selection (https://lwn.net/Articles/815491/)
     struct io_uring_probe *probe = io_uring_get_probe_ring(&ring);
