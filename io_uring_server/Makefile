@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -O2
+CFLAGS = -Wall -Wextra -Werror -pedantic -std=gnu17 -O2
 DEBUG_FLAGS = -Wall -g3 -O0 -fsanitize=address
 LDFLAGS = -luring
 
@@ -17,6 +17,6 @@ debug: $(OBJ)
 	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o $@ $^
 
 clean:
-	$(RM) $(BIN) $(OBJ)
+	$(RM) $(BIN) $(OBJ) debug
 
 .PHONY: all clean

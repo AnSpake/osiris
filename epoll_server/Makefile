@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -Wall -Wextra -pedantic -std=c++17 -O2 -g3
+CXXFLAGS = -Wall -Wextra -Werror -pedantic -std=c++17 -O2 -g3
 DEBUG_FLAGS = -g3 -O0 -fsanitize=address
 
 OBJ = epoll_server.o
