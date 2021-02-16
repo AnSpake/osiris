@@ -1,4 +1,4 @@
-all: install io_uring epoll benchmark
+all: install io_uring_srv epoll_srv benchmark
 
 install:
 	echo "Cloning axboe/liburing/5671af3..."
