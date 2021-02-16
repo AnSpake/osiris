@@ -182,21 +182,21 @@ int main(int argc, char** argv)
     if (argc != 3)
     {
         std::cerr << "Usage: ./server IP PORT\n";
-        return 1;
+        return EXIT_FAILURE;
     }
 
     int epoll_id = epoll_create1(0);
     if (epoll_id == -1)
     {
         std::cerr << "Error while creating the epoll instance\n";
-        return 1;
+        return EXIT_FAILURE;
     }
 
     int server_socket = prepare_epoll_server(argv[1], argv[2]);
     if (server_socket == -1)
     {
         std::cerr << "Error while creating the server\n";
-        return 1;
+        return EXIT_FAILURE;
     }
 
     register_socket(server_socket, epoll_id, EPOLLIN);
@@ -208,5 +208,5 @@ int main(int argc, char** argv)
     if (epoll_id != -1)
         close(epoll_id);
 
-    return 0;
+    return EXIT_SUCCESS;
 }

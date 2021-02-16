@@ -26,7 +26,7 @@ typedef enum
 
 struct conn_data
 {
-    __u32 fd;
+    int fd;
     __u16 type;
     __u16 buff_idx;
 };
@@ -235,7 +235,7 @@ int main(int argc, char **argv)
     if (argc != 3)
     {
         printf("Usage: ./server IP PORT\n");
-        return 1;
+        return EXIT_FAILURE;
     }
 
     // server socket configurations
@@ -243,7 +243,7 @@ int main(int argc, char **argv)
     if (server_socket == -1)
     {
         printf("Error while creating the server\n");
-        return 1;
+        return EXIT_FAILURE;
     }
 
     // io_uring configurations
