@@ -186,8 +186,7 @@ void server_loop(int server_socket, struct io_uring ring)
             switch (curr_type)
             {
                 case ACCEPT:
-                    if (event_res >= 0)
-                        submit_recv(&ring, event_res);
+                    submit_recv(&ring, event_res);
 
                     // Register server again to monitor for new connections
                     accept_client(server_socket, &ring);
