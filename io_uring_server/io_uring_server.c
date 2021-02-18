@@ -249,7 +249,11 @@ int main(int argc, char **argv)
     // io_uring configurations
     struct io_uring ring;
     struct io_uring_params params = { 0 };
+
+#ifdef KERNEL_POLL_MODE
     params.flags = IORING_SETUP_SQPOLL;
+#endif
+
     if (io_uring_queue_init_params(ENTRIES, &ring, &params))
     {
         fprintf(stderr, "io_uring_queue_params failed: %s.\n", strerror(errno));
