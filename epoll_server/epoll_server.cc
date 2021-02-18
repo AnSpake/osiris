@@ -1,5 +1,6 @@
 #include <cstring>
 #include <iostream>
+#include <errno.h>
 #include <fcntl.h>
 #include <netdb.h>
 #include <sys/epoll.h>
@@ -47,7 +48,7 @@ void set_non_blocking(int socket)
 {
     if (fcntl(socket, F_SETFL, fcntl(socket, F_GETFL) | O_NONBLOCK) == -1)
     {
-        std::cerr << "Failed to set the socket nonblocking\n";
+        std::cerr << "Failed to set the socket nonblocking: " << strerror(errno) << '\n';
         exit(EXIT_FAILURE);
     }
 }
@@ -65,14 +66,14 @@ int prepare_epoll_server(std::string ip, std::string port)
 
     if (getaddrinfo(ip.c_str(), port.c_str(), &hints, &result) == -1)
     {
-        std::cerr << "getaddrinfo failed !\n";
+        std::cerr << "getaddrinfo failed: " << strerror(errno) << '\n';
         return -1;
     }
 
     int socket = create_and_bind(result);
     if (socket == -1)
     {
-        std::cerr << "getaddrinfo failed !\n";
+        std::cerr << "Server socket creation failed !\n";
         return -1;
     }
     free(result);
@@ -138,7 +139,7 @@ void server_loop(int server_socket, int epoll_id)
                     auto curr_idx = clients.find(client_socket);
                     if (curr_idx == clients.end())
                     {
-                        std::cerr << "Could not find clients\n";
+                        std::cerr << "Could not find any clients\n";
                         continue;
                     }
                     int curr_socket = curr_idx->first;
@@ -150,7 +151,7 @@ void server_loop(int server_socket, int epoll_id)
 
                     if (nread == -1)
                     {
-                        std::cerr << "Recv failed\n";
+                        std::cerr << "Recv failed: " << strerror(errno) << '\n';
                         continue;
                     }
 
@@ -164,8 +165,11 @@ void server_loop(int server_socket, int epoll_id)
                     std::cout << curr_buff.data();
 
                     // Assume we get everything in one call
-                    send(curr_socket, curr_buff.data(), curr_buff.size(),
-                         MSG_NOSIGNAL);
+                    if (send(curr_socket, curr_buff.data(), curr_buff.size(),
+                             MSG_NOSIGNAL) == -1)
+                    {
+                        std::cerr << "Send failed: " << strerror(errno) << '\n';
+                    }
                 }
 
                 if (client_disconnect)
