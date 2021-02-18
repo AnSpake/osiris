@@ -145,10 +145,8 @@ void server_loop(int server_socket, int epoll_id)
                     std::vector<char> curr_buff = curr_idx->second;
 
                     // Assume we get everything in one call
-                    ssize_t nread = recv(curr_socket,
-                                         curr_buff.data(),
-                                         DEFAULT_BUFFER_SIZE,
-                                         MSG_NOSIGNAL);
+                    ssize_t nread = recv(curr_socket, curr_buff.data(),
+                                         DEFAULT_BUFFER_SIZE, 0);
 
                     if (nread == -1)
                     {
@@ -164,6 +162,10 @@ void server_loop(int server_socket, int epoll_id)
 
                     curr_buff.resize(nread);
                     std::cout << curr_buff.data();
+
+                    // Assume we get everything in one call
+                    send(curr_socket, curr_buff.data(), curr_buff.size(),
+                         MSG_NOSIGNAL);
                 }
 
                 if (client_disconnect)
