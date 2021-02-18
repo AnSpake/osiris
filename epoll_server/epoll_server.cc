@@ -162,7 +162,7 @@ void server_loop(int server_socket, int epoll_id)
                     }
 
                     curr_buff.resize(nread);
-                    std::cout << curr_buff.data();
+                    std::cout << "Echo: " << curr_buff.data();
 
                     // Assume we get everything in one call
                     if (send(curr_socket, curr_buff.data(), curr_buff.size(),
