@@ -103,7 +103,6 @@ int accept_client(int server_socket, int epoll_id)
     if (NONBLOCKING_IO == 1)
         set_non_blocking(socket);
 
-//#if defined(EPOLL_MODE_ET) && EPOLL_MODE_ET+0
 #ifdef EPOLL_MODE_ET
     register_socket(socket, epoll_id, EPOLLIN | EPOLLOUT);
 #else
