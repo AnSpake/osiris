@@ -1,5 +1,7 @@
 all: install io_uring_srv epoll_srv benchmark
 
+bin: io_uring_srv epoll_srv
+
 install:
 	echo "Cloning axboe/liburing/5671af3..."
 	git clone https://github.com/axboe/liburing.git
