@@ -25,23 +25,25 @@ benchmark()
 
             # Reset the echo server
             kill "$PID"
-            sleep 5
+            sleep 10
         done
     done
 }
 
+ROOT_PATH=".."
+
 # 1: epoll_level_triggered
 echo "Benchmarking epoll in level triggered mode"
-benchmark "epoll_server/epoll_server_lt"
+benchmark "$ROOT_PATH/epoll_server/epoll_server_lt"
 
 # 2: epoll_edge_triggered
 echo "Benchmarking epoll in edge triggered mode"
-benchmark "epoll_server/epoll_server_et"
+benchmark "$ROOT_PATH/epoll_server/epoll_server_et"
 
 # 3: io_uring interrupt driven
 echo "Benchmarking io_uring in interrupt driven mode"
-benchmark "io_uring_server/io_uring_server"
+benchmark "$ROOT_PATH/io_uring_server/io_uring_server"
 
 # 4: io_uring kernel polling
 echo "Benchmarking io_uring in kernel polling mode"
-benchmark "io_uring_server/io_uring_server_sqpoll"
+benchmark "$ROOT_PATH/io_uring_server/io_uring_server_sqpoll"
