@@ -12,8 +12,8 @@
 
 #define NONBLOCKING_IO 1
 
-#define ENTRIES 128
-#define BUFF_MAX_SIZE 256
+#define ENTRIES 512
+#define BUFF_MAX_SIZE 1024
 #define GRP_ID 1337
 
 #define MAXCONN 512
