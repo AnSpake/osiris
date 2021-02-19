@@ -13,7 +13,7 @@
 #define BUFF_MAX_SIZE 256
 #define GRP_ID 1337
 
-#define MAXCONN 128
+#define MAXCONN 512
 char buffers[MAXCONN][BUFF_MAX_SIZE] = { 0 };
 
 typedef enum
