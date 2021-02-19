@@ -1,26 +1,47 @@
 #!/bin/bash
 
-if [ "$#" -ne 2 ]; then
-    echo "Usage: ./benchmark.sh IP PORT"
-    exit 1
-fi
+IP="127.0.0.1"
+PORT="8000"
 
-IP="$1"
-PORT="$2"
+benchmark()
+{
+    BIN="$1"
 
-PID=$(lsof -itcp:"$PORT" | sed -n -e 2p | awk '{print $2}')
-taskset -cp 0 $PID
-
-for bytes in 1 128 512
-do
-    for connections in 1 50 150
+    for bytes in 1 128 512
     do
-        echo "Context switches BEFORE test with $connections connections and $bytes bytes"
-        grep ctxt /proc/"$PID"/status
-        cargo run --release -- --address "$IP:$PORT" --number $connections --duration 60 --length $bytes
+        for connections in 1 50 150
+        do
+            # Start up the echo server
+            ./"$BIN" "$IP" "$PORT" &
+            PID=$(lsof -itcp:"$PORT" | sed -n -e 2p | awk '{print $2}')
+            taskset -cp 0 $PID
 
-        echo "Context switches AFTER test with $connections connections and $bytes bytes"
-        grep ctxt /proc/"$PID"/status
-        sleep 5
+            echo "Context switches BEFORE test with $connections connections and $bytes bytes"
+            grep ctxt /proc/"$PID"/status
+            cargo run --release -- --address "$IP:$PORT" --number $connections --duration 60 --length $bytes
+
+            echo "Context switches AFTER test with $connections connections and $bytes bytes"
+            grep ctxt /proc/"$PID"/status
+
+            # Reset the echo server
+            kill "$PID"
+            sleep 5
+        done
     done
-done
+}
+
+# 1: epoll_level_triggered
+echo "Benchmarking epoll in level triggered mode"
+benchmark "epoll_server/epoll_server_lt"
+
+# 2: epoll_edge_triggered
+echo "Benchmarking epoll in edge triggered mode"
+benchmark "epoll_server/epoll_server_et"
+
+# 3: io_uring interrupt driven
+echo "Benchmarking io_uring in interrupt driven mode"
+benchmark "io_uring_server/io_uring_server"
+
+# 4: io_uring kernel polling
+echo "Benchmarking io_uring in kernel polling mode"
+benchmark "io_uring_server/io_uring_server_sqpoll"
