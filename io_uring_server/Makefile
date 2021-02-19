@@ -19,7 +19,7 @@ $(BIN): $(SRC)
 # Debug only for interrupt mode of io_uring
 debug: CFLAGS = $(DEBUG_FLAGS)
 debug: LDFLAGS += -fsanitize=address
-debug: $(OBJ)
+debug: $(SRC)
 	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o $@ $^
 
 clean:
