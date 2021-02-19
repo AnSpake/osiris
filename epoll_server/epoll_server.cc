@@ -10,8 +10,8 @@
 #include <unordered_map>
 #include <vector>
 
-#define MAX_EVENTS 64
-#define DEFAULT_BUFFER_SIZE 256
+#define MAX_EVENTS 512
+#define DEFAULT_BUFFER_SIZE 1024
 #define NONBLOCKING_IO 1
 
 using clients_umap = std::unordered_map<int, std::vector<char>>;
@@ -162,7 +162,9 @@ void server_loop(int server_socket, int epoll_id)
                     }
 
                     curr_buff.resize(nread);
-                    std::cout << "Echo: " << curr_buff.data();
+
+                    // TODO: uncomment next line when not using benchmarking.sh
+                    //std::cout << "Echo: " << curr_buff.data();
 
                     // Assume we get everything in one call
                     if (send(curr_socket, curr_buff.data(), curr_buff.size(),

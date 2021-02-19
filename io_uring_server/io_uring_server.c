@@ -220,7 +220,8 @@ void server_loop(int server_socket, struct io_uring ring)
                     int buff_idx = cqe->flags >> 16;
 
                     // Handle request: here we only print the message
-                    printf("Echo: %s", buffers[buff_idx]);
+                    // TODO: uncomment next line when not using benchmarking.sh
+                    //printf("Echo: %s", buffers[buff_idx]);
 
                     submit_send(&ring, conn.fd, buff_idx, event_res);
                     break;
