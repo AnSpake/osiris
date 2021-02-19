@@ -1,4 +1,5 @@
 #include <errno.h>
+#include <fcntl.h>
 #include <netdb.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -8,6 +9,8 @@
 #include <unistd.h>
 
 #include "liburing.h"
+
+#define NONBLOCKING_IO 1
 
 #define ENTRIES 128
 #define BUFF_MAX_SIZE 256
@@ -58,6 +61,15 @@ int create_and_bind(struct addrinfo *result)
     return -1;
 }
 
+void set_non_blocking(int socket)
+{
+    if (fcntl(socket, F_SETFL, fcntl(socket, F_GETFL) | O_NONBLOCK) == -1)
+    {
+        fprintf(stderr, "Failed to set the socket non blocking: %s\n", strerror(errno));
+        exit(EXIT_FAILURE);
+    }
+}
+
 int prepare_server_socket(const char* ip, const char* port)
 {
     struct addrinfo *result;
@@ -71,7 +83,7 @@ int prepare_server_socket(const char* ip, const char* port)
 
     if (getaddrinfo(ip, port, &hints, &result))
     {
-        fprintf(stderr, "getaddrinfo failed\n");
+        fprintf(stderr, "getaddrinfo failed: %s\n", strerror(errno));
         exit(EXIT_FAILURE);
     }
 
@@ -81,6 +93,7 @@ int prepare_server_socket(const char* ip, const char* port)
 
     if (socket != -1)
         listen(socket, SOMAXCONN);
+
     return socket;
 }
 
@@ -186,6 +199,8 @@ void server_loop(int server_socket, struct io_uring ring)
             switch (curr_type)
             {
                 case ACCEPT:
+                    if (NONBLOCKING_IO == 1)
+                        set_non_blocking(event_res);
                     submit_recv(&ring, event_res);
 
                     // Register server again to monitor for new connections
