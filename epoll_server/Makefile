@@ -18,8 +18,9 @@ $(BIN_LT): $(SRC)
 # Debug mode is for Edge Trigger mode by default
 debug: CXXFLAGS += $(DEBUG_FLAGS)
 debug: LDFLAGS += -fsanitize=address
-debug: $(OBJ)
-	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $^
+#debug: CPPFLAGS = -DEPOLL_MODE_ET
+debug: $(SRC)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) -o $@ $^
 
 clean:
 	$(RM) $(BIN_ET) $(BIN_LT) epoll_server.o  debug
