@@ -135,7 +135,6 @@ void server_loop(int server_socket, int epoll_id)
                 int client_socket = events[ev].data.fd;
                 uint32_t event_flags = events[ev].events;
 
-                bool client_disconnect = false;
                 if (event_flags & EPOLLIN)
                 {
                     auto curr_idx = clients.find(client_socket);
@@ -159,7 +158,8 @@ void server_loop(int server_socket, int epoll_id)
 
                     if (nread == 0)
                     {
-                        client_disconnect = true;
+                        if (client_socket != -1)
+                            close(client_socket);
                         continue;
                     }
 
@@ -174,12 +174,6 @@ void server_loop(int server_socket, int epoll_id)
                     {
                         std::cerr << "Send failed: " << strerror(errno) << '\n';
                     }
-                }
-
-                if (client_disconnect)
-                {
-                    if (client_socket != 1)
-                        close(client_socket);
                 }
             }
         }
