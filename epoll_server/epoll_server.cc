@@ -94,7 +94,7 @@ void register_socket(int socket, int epoll_id, uint32_t flag)
 
 int accept_client(int server_socket, int epoll_id)
 {
-    int socket = accept(server_socket, nullptr, nullptr);
+    int socket = accept(server_socket, NULL, NULL);
     if (socket == -1)
         return -1;
 
