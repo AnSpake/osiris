@@ -100,6 +100,11 @@ int prepare_server_socket(const char* ip, const char* port)
 void accept_client(int server_socket, struct io_uring* ring)
 {
     struct io_uring_sqe *sqe = io_uring_get_sqe(ring);
+    if (!sqe)
+    {
+        printf("io_uring_get_sqe failed for accept event. SQ full.\n");
+        exit(EXIT_FAILURE);
+    }
 
     io_uring_prep_accept(sqe, server_socket, NULL, NULL, 0);
 
@@ -114,8 +119,12 @@ void accept_client(int server_socket, struct io_uring* ring)
 
 void submit_recv(struct io_uring* ring, int client_fd)
 {
-
     struct io_uring_sqe *sqe = io_uring_get_sqe(ring);
+    if (!sqe)
+    {
+        fprintf(stderr, "io_uring_get_sqe failed for recv event. SQ full.\n");
+        exit(EXIT_FAILURE);
+    }
 
     io_uring_prep_recv(sqe, client_fd, NULL, BUFF_MAX_SIZE, 0);
     io_uring_sqe_set_flags(sqe, IOSQE_BUFFER_SELECT);
@@ -136,6 +145,11 @@ void submit_recv(struct io_uring* ring, int client_fd)
 void submit_send(struct io_uring* ring, int client_fd, int buff_idx, int nread)
 {
     struct io_uring_sqe* sqe = io_uring_get_sqe(ring);
+    if (!sqe)
+    {
+        fprintf(stderr, "io_uring_get_sqe failed for send event. SQ full.\n");
+        exit(EXIT_FAILURE);
+    }
 
     io_uring_prep_send(sqe, client_fd, &buffers[buff_idx], nread, 0);
 
@@ -152,6 +166,12 @@ void submit_send(struct io_uring* ring, int client_fd, int buff_idx, int nread)
 void register_provide_buffers(struct io_uring* ring, int buff_idx)
 {
     struct io_uring_sqe* sqe = io_uring_get_sqe(ring);
+    if (!sqe)
+    {
+        fprintf(stderr, "io_uring_get_sqe failed for provide_buffers event. SQ full.\n");
+        exit(EXIT_FAILURE);
+    }
+
     io_uring_prep_provide_buffers(sqe, buffers[buff_idx], BUFF_MAX_SIZE, 1, GRP_ID, buff_idx);
 
     struct conn_data conn =
@@ -199,9 +219,12 @@ void server_loop(int server_socket, struct io_uring ring)
             switch (curr_type)
             {
                 case ACCEPT:
-                    if (NONBLOCKING_IO == 1)
-                        set_non_blocking(event_res);
-                    submit_recv(&ring, event_res);
+                    if (event_res > 0)
+                    {
+                        if (NONBLOCKING_IO == 1)
+                            set_non_blocking(event_res);
+                        submit_recv(&ring, event_res);
+                    }
 
                     // Register server again to monitor for new connections
                     accept_client(server_socket, &ring);
