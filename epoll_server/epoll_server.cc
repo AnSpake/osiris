@@ -86,7 +86,7 @@ int prepare_epoll_server(std::string ip, std::string port)
 void register_socket(int socket, int epoll_id, uint32_t flag)
 {
     struct epoll_event event {};
-    event.events = flag | EPOLLET;
+    event.events = flag;
     event.data.fd = socket;
 
     epoll_ctl(epoll_id, EPOLL_CTL_ADD, socket, &event);
