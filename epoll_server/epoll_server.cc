@@ -80,9 +80,6 @@ int prepare_epoll_server(std::string ip, std::string port)
 
     listen(socket, SOMAXCONN);
 
-    if (NONBLOCKING_IO == 1)
-        set_non_blocking(socket);
-
     return socket;
 }
 
