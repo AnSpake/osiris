@@ -105,7 +105,7 @@ int accept_client(int server_socket, int epoll_id)
         set_non_blocking(socket);
 
 #ifdef EPOLL_MODE_ET
-    register_socket(socket, epoll_id, EPOLLIN | EPOLLOUT);
+    register_socket(socket, epoll_id, EPOLLIN | EPOLLOUT | EPOLLET);
 #else
     register_socket(socket, epoll_id, EPOLLIN);
 #endif
