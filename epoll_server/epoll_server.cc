@@ -120,6 +120,11 @@ void server_loop(int server_socket, int epoll_id)
     {
         struct epoll_event events[MAX_EVENTS];
         int nbr_events = epoll_wait(epoll_id, events, MAX_EVENTS, -1);
+        if (nbr_events == -1)
+        {
+            std::cerr << "Epoll_wait failed: " << strerror(errno) << '\n';
+            exit(EXIT_FAILURE);
+        }
 
         for (int ev = 0; ev < nbr_events; ++ev)
         {
