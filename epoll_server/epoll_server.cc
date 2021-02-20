@@ -159,7 +159,10 @@ void server_loop(int server_socket, int epoll_id)
                     if (nread == 0)
                     {
                         if (client_socket != -1)
+                        {
+                            epoll_ctl(epoll_id, EPOLL_CTL_DEL, client_socket, NULL);
                             close(client_socket);
+                        }
                         continue;
                     }
 
