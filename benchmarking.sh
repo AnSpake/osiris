@@ -13,8 +13,10 @@ benchmark()
         do
             # Start up the echo server
             ./"$BIN" "$IP" "$PORT" &
-            PID=$(lsof -itcp:"$PORT" | sed -n -e 2p | awk '{print $2}')
-            taskset -cp 0 $PID
+            sleep 5
+            PID=$(sudo lsof -itcp:"$PORT" | sed -n -e 2p | awk '{print $2}')
+            sudo taskset -cp 0 $PID
+            echo "Started $BIN, pid: $PID"
 
             echo "Context switches BEFORE test with $connections connections and $bytes bytes"
             grep ctxt /proc/"$PID"/status
@@ -22,28 +24,32 @@ benchmark()
 
             echo "Context switches AFTER test with $connections connections and $bytes bytes"
             grep ctxt /proc/"$PID"/status
+            echo -e "=======================================================================================================\n"
 
             # Reset the echo server
-            kill "$PID"
+            sudo kill "$PID"
             sleep 10
         done
     done
 }
 
 ROOT_PATH=".."
+pkill epoll_server
+pkill io_uring_server
 
 # 1: epoll_level_triggered
-echo "Benchmarking epoll in level triggered mode"
+echo "---- Benchmarking epoll in level triggered mode ----"
 benchmark "$ROOT_PATH/epoll_server/epoll_server_lt"
 
 # 2: epoll_edge_triggered
-echo "Benchmarking epoll in edge triggered mode"
+echo "---- Benchmarking epoll in edge triggered mode ----"
 benchmark "$ROOT_PATH/epoll_server/epoll_server_et"
 
 # 3: io_uring interrupt driven
-echo "Benchmarking io_uring in interrupt driven mode"
+echo "---- Benchmarking io_uring in interrupt driven mode ----"
 benchmark "$ROOT_PATH/io_uring_server/io_uring_server"
 
 # 4: io_uring kernel polling
-echo "Benchmarking io_uring in kernel polling mode"
+echo "---- Benchmarking io_uring in kernel polling mode ----"
+sudo setcap cap_sys_nice=eip "$ROOT_PATH/io_uring_server/io_uring_server_sqpoll"
 benchmark "$ROOT_PATH/io_uring_server/io_uring_server_sqpoll"
