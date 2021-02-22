@@ -13,10 +13,6 @@ This repository contains:
 - io_uring server with interrupt, poll and kernel polling modes
 - benchmarking results (faio)
 
-## Difficulties
-- kernel polling: IORING_FEAT_SQPOLL_NONFIXED doesn't seems to be available yet -> it's on linux kernel 5.10
-- ~~prep_read is making io_uring_submit_and_wait blocking indefinitely in latest master branch~~ (solved)
-
 ## io_uring additionnal informations
 - Kernel polling mode will only cost 2 context switches for the server (and additionnal
 context switches to wake up the kernel thread)
@@ -30,11 +26,8 @@ the SQEs must still be allocated separately.
 This brings the necessary mmap calls down from 3 to 2.
 
 ## TODO
-- [x] debug read (urgent)
-- [ ] Kernel polling mode available (register fds for now)
-- [ ] io_uring server handling multiple clients (c++ comeback ?) (need research as we might not need it thanks to Automatic buffer selection)
-- [ ] benchmarking routines
-- [ ] Kernel polling mode with FEAT_SQPOLL_NONFIXED flag when it's available
+- [ ] Test w/ io_uring kernel polling mode without IORING_FEAT_SQPOLL_NONFIXED
+- [ ] Test w/ io_uring without automatic buffer selection
 
 ### Authors
 Amandine Nassiri <amandine.nassiri@epita.fr>  
