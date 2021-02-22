@@ -1,17 +1,13 @@
 # Welcome !
 
-## Update: Feb 15th 7pm
-The bug on the hanging recv is solved, you can test the project on your computer if you want
-> make all
-> cd io_uring_server
+## Usage
+> make all  
+> cd io_uring_server  
 > ./io_uring_server 127.0.0.1 8000
-
-in another terminal
-> echo toto | netcat 127.0.0.1 8000
 
 ## Disclaimer
 This is a ongoing project, it is not finished yet.  
-This project needs at least a linux kernel 5.9 or later.  
+This project needs at least a linux kernel 5.11 or later.  
 Make install will actually install liburing on your computer, beware if you don't want this.  
 
 ## What is io_uring
@@ -24,13 +20,11 @@ The point of this project is to do a benchmarking of the different modes availab
 ## Basis
 io_uring uses a submission and a completions queue.  
 You, as a user will create request that you will send to the submission queue. For example if I want to read something, I will have to prepare a "Read Request" to send to the submission queue. Then io_uring will get us the result of our read from the completion queue (a return value following the behavior of the read syscall).  
-That seems a bit complex for a simple read, and that's where liburing comes to the rescue (kind of).  
+That seems a bit complex for a simple read, and that's where liburing comes to the rescue.  
 Liburing is a library to use io_uring. They made lots of wrapper to helps us out !  
-Even with liburing, the code looks "weird", I mean we are coding up to 5 lines juste to make a read (cf: io_uring_server/io_uring_server.c:submit_read), but trust me this is better than using io_uring directly ° u °"
 
 As for the code itself, I've seen some magic about IORING_FEAT_FAST_POLL and the automatic buffer selection.  
-Theses are boniis to gain some more performance.  
-The automatic buffer selection can also resolve the issues of having a buffer per connections.
+The automatic buffer selection can also resolve the issues of having a buffer per connections, but it does cost half of the perfomance since its a additionnal event to submit.
 
 ## More details
 The kernel polling mode needs you to "register" every file descriptor with io_uring_register which is no fun, but a solution exists "IORING_FEAT_SQPOLL_NONFIXED".  
@@ -46,6 +40,3 @@ If you want to know more, the manpages documentation won't help much, but the so
 
 Since io_uring is quite new, there is a lot of new feature coming up often and its tight up to your kernel version.  
 Make sure you're using a recent enough linux kernel in order to have the needed features
-
-## Thanks !
-In any case, thank you for reading all of this ~
