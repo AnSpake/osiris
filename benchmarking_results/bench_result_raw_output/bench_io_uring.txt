@@ -1,0 +1,172 @@
+---- Benchmarking io_uring in interrupt driven mode ----
+pid 22084's current affinity list: 0-3
+pid 22084's new affinity list: 0
+Started ../io_uring_server/io_uring_server, pid: 22084
+Context switches BEFORE test with 1 connections and 1 bytes
+voluntary_ctxt_switches:	3
+nonvoluntary_ctxt_switches:	0
+    Finished release [optimized] target(s) in 0.00s
+     Running `target/release/echo_bench --address '127.0.0.1:8000' --number 1 --duration 60 --length 1`
+Benchmarking: 127.0.0.1:8000
+1 clients, running 1 bytes, 60 sec.
+
+Speed: 62944 request/sec, 62944 response/sec
+Requests: 3776663
+Responses: 3776663
+Context switches AFTER test with 1 connections and 1 bytes
+voluntary_ctxt_switches:	3769269
+nonvoluntary_ctxt_switches:	11476
+=======================================================================================================
+
+pid 22120's current affinity list: 0-3
+pid 22120's new affinity list: 0
+Started ../io_uring_server/io_uring_server, pid: 22120
+Context switches BEFORE test with 50 connections and 1 bytes
+voluntary_ctxt_switches:	3
+nonvoluntary_ctxt_switches:	0
+    Finished release [optimized] target(s) in 0.00s
+     Running `target/release/echo_bench --address '127.0.0.1:8000' --number 50 --duration 60 --length 1`
+Benchmarking: 127.0.0.1:8000
+50 clients, running 1 bytes, 60 sec.
+
+Speed: 170027 request/sec, 170027 response/sec
+Requests: 10201663
+Responses: 10201663
+Context switches AFTER test with 50 connections and 1 bytes
+voluntary_ctxt_switches:	7
+nonvoluntary_ctxt_switches:	473840
+=======================================================================================================
+
+pid 22203's current affinity list: 0-3
+pid 22203's new affinity list: 0
+Started ../io_uring_server/io_uring_server, pid: 22203
+Context switches BEFORE test with 150 connections and 1 bytes
+voluntary_ctxt_switches:	3
+nonvoluntary_ctxt_switches:	1
+    Finished release [optimized] target(s) in 0.00s
+     Running `target/release/echo_bench --address '127.0.0.1:8000' --number 150 --duration 60 --length 1`
+Benchmarking: 127.0.0.1:8000
+150 clients, running 1 bytes, 60 sec.
+
+Speed: 168526 request/sec, 168526 response/sec
+Requests: 10111574
+Responses: 10111573
+Context switches AFTER test with 150 connections and 1 bytes
+voluntary_ctxt_switches:	8
+nonvoluntary_ctxt_switches:	402387
+=======================================================================================================
+
+pid 22388's current affinity list: 0-3
+pid 22388's new affinity list: 0
+Started ../io_uring_server/io_uring_server, pid: 22388
+Context switches BEFORE test with 1 connections and 128 bytes
+voluntary_ctxt_switches:	3
+nonvoluntary_ctxt_switches:	0
+    Finished release [optimized] target(s) in 0.00s
+     Running `target/release/echo_bench --address '127.0.0.1:8000' --number 1 --duration 60 --length 128`
+Benchmarking: 127.0.0.1:8000
+1 clients, running 128 bytes, 60 sec.
+
+Speed: 61696 request/sec, 61696 response/sec
+Requests: 3701774
+Responses: 3701774
+Context switches AFTER test with 1 connections and 128 bytes
+voluntary_ctxt_switches:	3693636
+nonvoluntary_ctxt_switches:	11517
+=======================================================================================================
+
+pid 22416's current affinity list: 0-3
+pid 22416's new affinity list: 0
+Started ../io_uring_server/io_uring_server, pid: 22416
+Context switches BEFORE test with 50 connections and 128 bytes
+voluntary_ctxt_switches:	3
+nonvoluntary_ctxt_switches:	1
+    Finished release [optimized] target(s) in 0.00s
+     Running `target/release/echo_bench --address '127.0.0.1:8000' --number 50 --duration 60 --length 128`
+Benchmarking: 127.0.0.1:8000
+50 clients, running 128 bytes, 60 sec.
+
+Speed: 176406 request/sec, 176406 response/sec
+Requests: 10584387
+Responses: 10584386
+Context switches AFTER test with 50 connections and 128 bytes
+voluntary_ctxt_switches:	18
+nonvoluntary_ctxt_switches:	192896
+=======================================================================================================
+
+pid 22493's current affinity list: 0-3
+pid 22493's new affinity list: 0
+Started ../io_uring_server/io_uring_server, pid: 22493
+Context switches BEFORE test with 150 connections and 128 bytes
+voluntary_ctxt_switches:	3
+nonvoluntary_ctxt_switches:	0
+    Finished release [optimized] target(s) in 0.00s
+     Running `target/release/echo_bench --address '127.0.0.1:8000' --number 150 --duration 60 --length 128`
+Benchmarking: 127.0.0.1:8000
+150 clients, running 128 bytes, 60 sec.
+
+Speed: 167413 request/sec, 167413 response/sec
+Requests: 10044790
+Responses: 10044790
+Context switches AFTER test with 150 connections and 128 bytes
+voluntary_ctxt_switches:	10
+nonvoluntary_ctxt_switches:	321276
+=======================================================================================================
+
+pid 22677's current affinity list: 0-3
+pid 22677's new affinity list: 0
+Started ../io_uring_server/io_uring_server, pid: 22677
+Context switches BEFORE test with 1 connections and 512 bytes
+voluntary_ctxt_switches:	3
+nonvoluntary_ctxt_switches:	0
+    Finished release [optimized] target(s) in 0.00s
+     Running `target/release/echo_bench --address '127.0.0.1:8000' --number 1 --duration 60 --length 512`
+Benchmarking: 127.0.0.1:8000
+1 clients, running 512 bytes, 60 sec.
+
+Speed: 61424 request/sec, 61424 response/sec
+Requests: 3685470
+Responses: 3685470
+Context switches AFTER test with 1 connections and 512 bytes
+voluntary_ctxt_switches:	3678419
+nonvoluntary_ctxt_switches:	11380
+=======================================================================================================
+
+pid 22702's current affinity list: 0-3
+pid 22702's new affinity list: 0
+Started ../io_uring_server/io_uring_server, pid: 22702
+Context switches BEFORE test with 50 connections and 512 bytes
+voluntary_ctxt_switches:	3
+nonvoluntary_ctxt_switches:	0
+    Finished release [optimized] target(s) in 0.00s
+     Running `target/release/echo_bench --address '127.0.0.1:8000' --number 50 --duration 60 --length 512`
+Benchmarking: 127.0.0.1:8000
+50 clients, running 512 bytes, 60 sec.
+
+Speed: 174394 request/sec, 174394 response/sec
+Requests: 10463673
+Responses: 10463673
+Context switches AFTER test with 50 connections and 512 bytes
+voluntary_ctxt_switches:	11
+nonvoluntary_ctxt_switches:	228624
+=======================================================================================================
+
+pid 22793's current affinity list: 0-3
+pid 22793's new affinity list: 0
+Started ../io_uring_server/io_uring_server, pid: 22793
+Context switches BEFORE test with 150 connections and 512 bytes
+voluntary_ctxt_switches:	3
+nonvoluntary_ctxt_switches:	0
+    Finished release [optimized] target(s) in 0.00s
+     Running `target/release/echo_bench --address '127.0.0.1:8000' --number 150 --duration 60 --length 512`
+Benchmarking: 127.0.0.1:8000
+150 clients, running 512 bytes, 60 sec.
+
+Speed: 162882 request/sec, 162882 response/sec
+Requests: 9772972
+Responses: 9772971
+Context switches AFTER test with 150 connections and 512 bytes
+voluntary_ctxt_switches:	10
+nonvoluntary_ctxt_switches:	444378
+=======================================================================================================
+

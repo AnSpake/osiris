@@ -1,0 +1,5 @@
+Type of server,Number of context switches
+epoll edge trigger,1
+epoll level trigger,1
+io_uring interrupt,3
+io_uring sqpoll,5

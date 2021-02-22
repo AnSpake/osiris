@@ -1,0 +1,173 @@
+---- Benchmarking epoll in level triggered mode ----
+pid 40108's current affinity list: 0-3
+pid 40108's new affinity list: 0
+Started ../epoll_server/epoll_server_lt, pid: 40108
+Context switches BEFORE test with 1 connections and 1 bytes
+voluntary_ctxt_switches:	1
+nonvoluntary_ctxt_switches:	2
+    Finished release [optimized] target(s) in 0.00s
+     Running `target/release/echo_bench --address '127.0.0.1:8000' --number 1 --duration 60 --length 1`
+Benchmarking: 127.0.0.1:8000
+1 clients, running 1 bytes, 60 sec.
+
+Speed: 63769 request/sec, 63769 response/sec
+Requests: 3826149
+Responses: 3826149
+Context switches AFTER test with 1 connections and 1 bytes
+voluntary_ctxt_switches:	3823600
+nonvoluntary_ctxt_switches:	6202
+=======================================================================================================
+
+pid 40131's current affinity list: 0-3
+pid 40131's new affinity list: 0
+Started ../epoll_server/epoll_server_lt, pid: 40131
+Context switches BEFORE test with 50 connections and 1 bytes
+voluntary_ctxt_switches:	1
+nonvoluntary_ctxt_switches:	2
+    Finished release [optimized] target(s) in 0.00s
+     Running `target/release/echo_bench --address '127.0.0.1:8000' --number 50 --duration 60 --length 1`
+Benchmarking: 127.0.0.1:8000
+50 clients, running 1 bytes, 60 sec.
+
+Speed: 180400 request/sec, 180400 response/sec
+Requests: 10824027
+Responses: 10824026
+Context switches AFTER test with 50 connections and 1 bytes
+voluntary_ctxt_switches:	231
+nonvoluntary_ctxt_switches:	241666
+=======================================================================================================
+
+pid 40200's current affinity list: 0-3
+pid 40200's new affinity list: 0
+Started ../epoll_server/epoll_server_lt, pid: 40200
+Context switches BEFORE test with 150 connections and 1 bytes
+voluntary_ctxt_switches:	1
+nonvoluntary_ctxt_switches:	0
+    Finished release [optimized] target(s) in 0.00s
+     Running `target/release/echo_bench --address '127.0.0.1:8000' --number 150 --duration 60 --length 1`
+Benchmarking: 127.0.0.1:8000
+150 clients, running 1 bytes, 60 sec.
+
+Speed: 161612 request/sec, 161612 response/sec
+Requests: 9696776
+Responses: 9696775
+Context switches AFTER test with 150 connections and 1 bytes
+voluntary_ctxt_switches:	11
+nonvoluntary_ctxt_switches:	364648
+=======================================================================================================
+
+pid 40369's current affinity list: 0-3
+pid 40369's new affinity list: 0
+Started ../epoll_server/epoll_server_lt, pid: 40369
+Context switches BEFORE test with 1 connections and 128 bytes
+voluntary_ctxt_switches:	1
+nonvoluntary_ctxt_switches:	3
+    Finished release [optimized] target(s) in 0.00s
+     Running `target/release/echo_bench --address '127.0.0.1:8000' --number 1 --duration 60 --length 128`
+Benchmarking: 127.0.0.1:8000
+1 clients, running 128 bytes, 60 sec.
+
+Speed: 64287 request/sec, 64287 response/sec
+Requests: 3857220
+Responses: 3857220
+Context switches AFTER test with 1 connections and 128 bytes
+voluntary_ctxt_switches:	3854687
+nonvoluntary_ctxt_switches:	6061
+=======================================================================================================
+
+pid 40390's current affinity list: 0-3
+pid 40390's new affinity list: 0
+Started ../epoll_server/epoll_server_lt, pid: 40390
+Context switches BEFORE test with 50 connections and 128 bytes
+voluntary_ctxt_switches:	1
+nonvoluntary_ctxt_switches:	2
+    Finished release [optimized] target(s) in 0.00s
+     Running `target/release/echo_bench --address '127.0.0.1:8000' --number 50 --duration 60 --length 128`
+Benchmarking: 127.0.0.1:8000
+50 clients, running 128 bytes, 60 sec.
+
+Speed: 173799 request/sec, 173799 response/sec
+Requests: 10427955
+Responses: 10427953
+Context switches AFTER test with 50 connections and 128 bytes
+voluntary_ctxt_switches:	760
+nonvoluntary_ctxt_switches:	248455
+=======================================================================================================
+
+pid 40471's current affinity list: 0-3
+pid 40471's new affinity list: 0
+Started ../epoll_server/epoll_server_lt, pid: 40471
+Context switches BEFORE test with 150 connections and 128 bytes
+voluntary_ctxt_switches:	1
+nonvoluntary_ctxt_switches:	0
+    Finished release [optimized] target(s) in 0.00s
+     Running `target/release/echo_bench --address '127.0.0.1:8000' --number 150 --duration 60 --length 128`
+Benchmarking: 127.0.0.1:8000
+150 clients, running 128 bytes, 60 sec.
+
+Speed: 153226 request/sec, 153226 response/sec
+Requests: 9193567
+Responses: 9193565
+Context switches AFTER test with 150 connections and 128 bytes
+voluntary_ctxt_switches:	3
+nonvoluntary_ctxt_switches:	511420
+=======================================================================================================
+
+pid 40637's current affinity list: 0-3
+pid 40637's new affinity list: 0
+Started ../epoll_server/epoll_server_lt, pid: 40637
+Context switches BEFORE test with 1 connections and 512 bytes
+voluntary_ctxt_switches:	1
+nonvoluntary_ctxt_switches:	6
+    Finished release [optimized] target(s) in 0.00s
+     Running `target/release/echo_bench --address '127.0.0.1:8000' --number 1 --duration 60 --length 512`
+Benchmarking: 127.0.0.1:8000
+1 clients, running 512 bytes, 60 sec.
+
+Speed: 61447 request/sec, 61447 response/sec
+Requests: 3686821
+Responses: 3686821
+Context switches AFTER test with 1 connections and 512 bytes
+voluntary_ctxt_switches:	3682791
+nonvoluntary_ctxt_switches:	9405
+=======================================================================================================
+
+pid 40661's current affinity list: 0-3
+pid 40661's new affinity list: 0
+Started ../epoll_server/epoll_server_lt, pid: 40661
+Context switches BEFORE test with 50 connections and 512 bytes
+voluntary_ctxt_switches:	1
+nonvoluntary_ctxt_switches:	0
+    Finished release [optimized] target(s) in 0.00s
+     Running `target/release/echo_bench --address '127.0.0.1:8000' --number 50 --duration 60 --length 512`
+Benchmarking: 127.0.0.1:8000
+50 clients, running 512 bytes, 60 sec.
+
+Speed: 170742 request/sec, 170742 response/sec
+Requests: 10244579
+Responses: 10244578
+Context switches AFTER test with 50 connections and 512 bytes
+voluntary_ctxt_switches:	72
+nonvoluntary_ctxt_switches:	331639
+=======================================================================================================
+
+pid 40744's current affinity list: 0-3
+pid 40744's new affinity list: 0
+Started ../epoll_server/epoll_server_lt, pid: 40744
+Context switches BEFORE test with 150 connections and 512 bytes
+voluntary_ctxt_switches:	1
+nonvoluntary_ctxt_switches:	1
+    Finished release [optimized] target(s) in 0.00s
+     Running `target/release/echo_bench --address '127.0.0.1:8000' --number 150 --duration 60 --length 512`
+Benchmarking: 127.0.0.1:8000
+150 clients, running 512 bytes, 60 sec.
+
+Speed: 152455 request/sec, 152455 response/sec
+Requests: 9147317
+Responses: 9147315
+Context switches AFTER test with 150 connections and 512 bytes
+Recv failed: Connection reset by peer
+voluntary_ctxt_switches:	29
+nonvoluntary_ctxt_switches:	482876
+=======================================================================================================
+
