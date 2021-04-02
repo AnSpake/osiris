@@ -22,10 +22,10 @@ $(BIN): $(SRC)
 $(BIN_no_abs): $(SRC_no_abs)
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^
 
-# Debug only for interrupt mode of io_uring
+# Debug only for no automatic buffer selection version
 debug: CFLAGS = $(DEBUG_FLAGS)
 debug: LDFLAGS += -fsanitize=address
-debug: $(SRC)
+debug: $(SRC_no_abs)
 	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o $@ $^
 
 clean:
